@@ -241,3 +241,30 @@ BEGIN
     RAISE NOTICE 'Total: % pedido(s)', total_pedidos;
 END;
 $$;
+-- 1.4 Adicione um procedimento ao sistema do restaurante. Ele deve:
+-- Receber um parâmetro de entrada e saída (INOUT) 
+-- Na entrada, o parâmetro possui o código de um cliente 
+-- Na saída, o parâmetro deve possuir o número total de pedidos realizados pelo cliente 
+CREATE OR REPLACE PROCEDURE sp_total_pedidos_cliente_inout (
+    INOUT p_cod_cliente INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    SELECT COUNT(*)
+    INTO p_cod_cliente
+    FROM tb_pedido tb
+    WHERE tb.cod_cliente = p_cod_cliente;
+
+END;
+$$;
+
+DO $$
+DECLARE
+    cliente_id INT := 1;  
+BEGIN
+    CALL sp_total_pedidos_cliente_inout(cliente_id);
+ RAISE NOTICE 'O cliente possui % pedido(s).', cliente_id;
+
+END;
+$$;
