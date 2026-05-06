@@ -268,3 +268,25 @@ BEGIN
 
 END;
 $$;
+
+-- 1.5 Adicione um procedimento ao sistema do restaurante. Ele deve:
+-- Receber um parâmetro VARIADIC contendo nomes de pessoas 
+-- Fazer uma inserção na tabela de clientes para cada nome recebido 
+-- Receber um parâmetro de saída que contém o seguinte texto: “Os clientes: Pedro, Ana, João etc foram cadastrados” 
+-- Evidentemente, o resultado deve conter os nomes que de fato foram enviados por meio do parâmetro VARIADIC. 
+CREATE OR REPLACE PROCEDURE sp_cadastrar_clientes (
+    OUT resultado VARCHAR,
+    VARIADIC nomes VARCHAR[]
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    nome VARCHAR;
+    lista_nomes VARCHAR := '';
+BEGIN
+    FOREACH nome IN ARRAY nomes
+    LOOP
+        INSERT INTO tb_cliente (nome) VALUES (nome);
+        lista_nomes := lista_nomes || nome || ', ';
+    END LOOP;
+
